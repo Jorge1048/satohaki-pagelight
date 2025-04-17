@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SATOHAKI - Sistema Inteligente de Puntos</title>
+    <style>
+        :root {
+            --color-main: #6a1b9a;
+            --color-accent: #ffc107;
+            --color-bg: #f9f3ff;
+            --color-text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-bg);
+            margin: 0;
+            padding: 10px;
+            color: var(--color-text);
+        }
+        .container {
+            max-width: 100%;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        textarea {
+            min-height: 120px;
+            font-family: monospace;
+            resize: vertical;
+        }
+        textarea:focus, input:focus {
+            border-color: var(--color-main);
+            outline: none;
+        }
+        button {
+            background: var(--color-accent);
+            color: #000;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px 0;
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .clear-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        .copy-btn {
+            background: #2ecc71;
+            color: white;
+        }
+        .result-area {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ SATOHAKI - Sistema Ultra Inteligente ✨</h1>
+            <p>Pega los datos como quieras, en cualquier formato. ¡Yo lo entenderé todo!</p>
+        </div>
+        
+        <!-- Fecha -->
+        <div>
+            <label>🗓️ Fecha:</label>
+            <input type="text" id="fecha" placeholder="Ej: 16-14" value="16-14">
+        </div>
+        
+        <!-- Integrantes -->
+        <div>
+            <label>👥 Integrantes (puntos ganados):</label>
+            <textarea id="input-integrantes" placeholder="Pega aquí cualquier formato, yo lo entenderé">*Reo Mikage
+50k*3 + 80mil*2
+(Isagi Yoichi)
+40,000 + 3M*2
+Nagi/Light:
+200k*36 + 1.4m*2</textarea>
+        </div>
+        
+        <!-- Restas -->
+        <div>
+            <label>➖ Restas aplicadas:</label>
+            <textarea id="input-restas" placeholder="Pega aquí las restas en cualquier formato">Don Lorenzo:
+10,000 + 8k + 8000
+- Isagi Yoichi
+40k + 3M</textarea>
+        </div>
+        
+        <!-- Puntos millonarios -->
+        <div>
+            <label>🪙 Puntos millonarios:</label>
+            <textarea id="input-millonarios" placeholder="Expresión matemática">100k + 200k</textarea>
+        </div>
+        
+        <!-- Puntos VIPs -->
+        <div>
+            <label>💠 Puntos VIPs:</label>
+            <textarea id="input-vips" placeholder="Nombre y puntos VIP">Kunigami: 167.524m
+Rin Itoshi: 85M</textarea>
+        </div>
+        
+        <!-- Descripción actual -->
+        <div>
+            <label>🏮 Descripción actual:</label>
+            <input type="text" id="descripcion" placeholder="Número acumulado" value="2,000,000,000">
+        </div>
+        
+        <!-- Botones -->
+        <button onclick="calcularTodo()">🧠 CALCULAR CON INTELIGENCIA AVANZADA</button>
+        <button onclick="limpiarTodo()" class="clear-btn">🧹 LIMPIAR TODO</button>
+        
+        <!-- Resultado -->
+        <div class="result-area" id="resultado"></div>
+        <button onclick="copiarResultado()" class="copy-btn">📋 COPIAR RESULTADO</button>
+    </div>
+
+    <script>
+        // Función para limpiar todo
+        function limpiarTodo() {
+            if (confirm('¿Borrar todos los datos?')) {
+                document.getElementById('fecha').value = '';
+                document.getElementById('input-integrantes').value = '';
+                document.getElementById('input-restas').value = '';
+                document.getElementById('input-millonarios').value = '';
+                document.getElementById('input-vips').value = '';
+                document.getElementById('descripcion').value = '';
+                document.getElementById('resultado').textContent = '';
+            }
+        }
+
+        // Función ultra-inteligente para extraer nombres
+        function extraerNombre(linea) {
+            const formatos = [
+                /^[\*\-➤]?\s*([^:\n\(\)0-9][^:\n\(\)]*)[:\n\(\)]/,  // *Nombre: o *Nombre\n
+                /^[\*\-➤]?\s*([A-Za-záéíóúÁÉÍÓÚñÑ][^0-9\+\-\*\/\n]*)/,  // Nombre que comienza con letra
+                /^\(([^)]+)\)/,  // (Nombre)
+                /^([^*:\n\(\)0-9][^:\n\(\)]*)/  // Cualquier cosa que no empiece con número o símbolo
+            ];
+            
+            for (const formato of formatos) {
+                const match = linea.match(formato);
+                if (match && match[1] && match[1].trim()) {
+                    return match[1].trim();
+                }
+            }
+            return null;
+        }
+
+        // Función para limpiar y evaluar expresiones matemáticas
+        function evaluarExpresion(expr) {
+            if (!expr) return 0;
+            
+            const limpia = expr
+                .replace(/,/g, '')
+                .replace(/(\d+)k/gi, '$1*1000')
+                .replace(/(\d+)mil/gi, '$1*1000')
+                .replace(/(\d+)[mM]/g, '$1*1000000')
+                .replace(/(\d+)\.(\d+)m/g, (match, p1, p2) => `${p1}${p2.padEnd(6, '0').substring(0, 6)}`)
+                .replace(/[^\d\+\-\*\/\.]/g, '');
+            
+            try {
+                return new Function('return ' + limpia)();
+            } catch {
+                return 0;
+            }
+        }
+
+        // Procesamiento inteligente de datos
+        function procesarDatos(texto) {
+            const lineas = texto.split('\n');
+            const resultados = [];
+            let nombreActual = null;
+            let exprActual = '';
+
+            for (const linea of lineas) {
+                const nombre = extraerNombre(linea);
+                const exprPart = linea.replace(/^[^0-9]*/, '').trim();
+                
+                if (nombre) {
+                    if (nombreActual && exprActual) {
+                        resultados.push({
+                            nombre: nombreActual,
+                            total: evaluarExpresion(exprActual)
+                        });
+                        exprActual = '';
+                    }
+                    nombreActual = nombre;
+                }
+                
+                if (exprPart) {
+                    exprActual = exprActual ? `${exprActual}+${exprPart}` : exprPart;
+                }
+            }
+            
+            if (nombreActual && exprActual) {
+                resultados.push({
+                    nombre: nombreActual,
+                    total: evaluarExpresion(exprActual)
+                });
+            }
+            
+            return {
+                detalles: resultados,
+                total: resultados.reduce((sum, item) => sum + item.total, 0)
+            };
+        }
+
+        // Función para formatear números
+        function formatoNumero(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Generar la tabla de resultados
+        function generarTabla(datos) {
+            let tabla = `⊰᯽⊱┈──────╌❊╌──────┈⊰᯽⊱\n`;
+            tabla += `       🗒️𝑇𝐴𝐵𝐿𝐴 𝐷𝐸 𝑃𝑈𝑁𝑇𝑂𝑆🗒️\n\n`;
+            tabla += `🗓️𝐅𝐞𝐜𝐡𝐚:  \t${datos.fecha || 'No especificada'}\n\n`;
+            
+            if (datos.integrantes.detalles.length) {
+                tabla += `👥 𝐈𝐧𝐭𝐞𝐠𝐫𝐚𝐧𝐭𝐞𝐬 𝐪𝐮𝐞 𝐠𝐚𝐧𝐚𝐫𝐨𝐧 𝐩𝐮𝐧𝐭𝐨𝐬:\n\n`;
+                datos.integrantes.detalles.forEach(p => {
+                    tabla += `➤ \t*${p.nombre}:*\t${formatoNumero(p.total)}\n`;
+                });
+                tabla += `\n🏵️ Total puntos sumados:\n* ${formatoNumero(datos.integrantes.total)}\t\n\n`;
+            }
+            
+            if (datos.restas.detalles.length) {
+                tabla += `➖ Restas\n`;
+                datos.restas.detalles.forEach(p => {
+                    tabla += `➤ \t*${p.nombre}:*\t ${formatoNumero(p.total)}\n`;
+                });
+                tabla += `\n💣Total puntos restados:\n* ${formatoNumero(datos.restas.total)}\t\n\n`;
+            }
+            
+            if (datos.millonarios.total > 0) {
+                tabla += `🪙 Puntos millonarios\n* \t${formatoNumero(datos.millonarios.total)}\t\n\n`;
+            }
+            
+            if (datos.vips.detalles.length) {
+                tabla += `💠 Puntos vips\n`;
+                datos.vips.detalles.forEach(p => {
+                    tabla += `➤ *${p.nombre}:*\t${formatoNumero(p.total * 2)}\n`;
+                });
+                tabla += `\n`;
+            }
+            
+            tabla += `🏮 Descripción actual:\t${formatoNumero(datos.descripcion)}\t\n\n`;
+            tabla += `💰 Total: \t${formatoNumero(datos.totalFinal)}\t \n\n`;
+            tabla += `⊰᯽⊱┈──────╌❊╌──────┈⊰᯽⊱`;
+            
+            return tabla;
+        }
+
+        // Función para copiar el resultado
+        function copiarResultado() {
+            const resultado = document.getElementById('resultado');
+            const range = document.createRange();
+            range.selectNode(resultado);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            alert('¡Resultado copiado!');
+        }
+
+        // Función principal
+        function calcularTodo() {
+            const datos = {
+                fecha: document.getElementById('fecha').value.trim(),
+                descripcion: parseFloat(document.getElementById('descripcion').value.replace(/,/g, '')) || 0,
+                integrantes: procesarDatos(document.getElementById('input-integrantes').value),
+                restas: procesarDatos(document.getElementById('input-restas').value),
+                millonarios: {
+                    detalles: [],
+                    total: evaluarExpresion(document.getElementById('input-millonarios').value)
+                },
+                vips: procesarDatos(document.getElementById('input-vips').value)
+            };
+            
+            datos.totalFinal = datos.descripcion + datos.integrantes.total + datos.millonarios.total - datos.restas.total + (datos.vips.total * 2);
+            
+            document.getElementById('resultado').textContent = generarTabla(datos);
+        }
+
+        // Calcular automáticamente al cargar
+        window.addEventListener('DOMContentLoaded', calcularTodo);
+    </script>
+</body>
+</html>
