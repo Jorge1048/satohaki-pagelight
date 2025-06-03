@@ -41,7 +41,7 @@
             padding-bottom: 7px;
             display: inline-block;
             text-transform: uppercase;
-            margin-bottom: 10px; /
+            margin-bottom: 10px;
         }
         textarea, input {
             width: 100%;
@@ -140,7 +140,7 @@
             font-size: 16px;
             line-height: 1.6;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid #D1C4E9; /* Borde morado claro */
+            border: 1px solid #D1C4E9;
         }
         .info-box h2, .info-box h3 {
             color: #7B1FA2;
@@ -154,14 +154,13 @@
         }
     </style>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-9ET1T600T0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-9ET1T600T0');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ET1T600T0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-9ET1T600T0');
+    </script>
 </head>
 <body>
     <div class="container">
@@ -170,7 +169,6 @@
             <p style="color: #666; font-style: italic;">Pega los datos como quieras, en cualquier formato.</p>
         </div>
         
-        <!-- Campos originales (idénticos a tu versión) -->
         <div>
             <label>🗓️ Fecha:</label>
             <input type="text" id="fecha" placeholder="Ej: 16-14" value="16-14">
@@ -209,15 +207,14 @@ Rin Itoshi: 85M</textarea>
             <input type="text" id="descripcion" placeholder="Número acumulado" value="2,000,000,000">
         </div>
         
-        <!-- Botones con efectos mejorados -->
         <button onclick="calcularTodo()">🧠 CALCULAR CON INTELIGENCIA AVANZADA</button>
         <button onclick="limpiarTodo()" class="clear-btn">🧹 LIMPIAR TODO</button>
         
         <div class="result-area" id="resultado"></div>
         <button onclick="copiarResultado()" class="copy-btn">📋 COPIAR RESULTADO</button>
+        <button onclick="cambiarFicha()" class="copy-btn">🔄 CAMBIAR FICHA</button>
     </div>
 
-    <!-- Sección "¿Qué es esto?" (idéntica a tu original) -->
     <div class="container info-box">
         <h2>¿Qué es esto?</h2>
         <p>
@@ -240,7 +237,7 @@ Rin Itoshi: 85M</textarea>
         <h3>¿Cómo funciona?</h3>
         <p>
             Puedes pegar los datos del conteo de anime en cualquier formato; la herramienta los interpreta de manera automática, como si fuera una calculadora inteligente.<br>
-            Después de ingresar todos los datos, solo debes presionar el botón “Calcular con inteligencia avanzada”, y el sistema generará automáticamente la ficha completa con todos los cálculos, lista para copiar.
+            Después de ingresar todos los datos, solo debes presionar el botón "Calcular con inteligencia avanzada", y el sistema generará automáticamente la ficha completa con todos los cálculos, lista para copiar.
         </p>
         <h3>Ten en cuenta:</h3>
         <ul>
@@ -253,11 +250,9 @@ Rin Itoshi: 85M</textarea>
         </ul>
     </div>
 
-    <!-- Notificación de copiado -->
     <div class="copiado" id="copiadoNotif">✅ ¡Copiado al portapapeles!</div>
 
     <script>
-        // Funciones JavaScript ORIGINALES (sin cambios)
         function limpiarTodo() {
             if (confirm('¿Borrar todos los datos?')) {
                 document.getElementById('fecha').value = '';
@@ -344,6 +339,117 @@ Rin Itoshi: 85M</textarea>
             return tabla;
         }
 
+        function generarFichaEstilizada1(datos) {
+            return `
+👒ᴘᴜɴᴛᴏs ᴅɪᴀʀɪᴏs ᴅᴇ ᴏɴᴇ ᴘɪᴇᴄᴇ 🏴‍☠️
+            ❈ 🅂🄰🅃🄾🄷🄰🄺🄸 ❈
+
+ғᴇᴄʜᴀ:
+❛${datos.fecha}❜
+
+•❅───────✧❅✦❅✧───────❅•
+❲ᴘᴀʀᴛɪᴄɪᴘᴀɴᴛᴇs ǫᴜᴇ ɢᴀɴᴀʀᴏɴ ᴘᴜɴᴛᴏs❳   
+${datos.integrantes.detalles.map(p => `✦   :  *_${p.nombre}:_* ${formatoNumero(p.total)}\n`).join('')}
+· ˚   · 　 ˚  
+↻ *ᴇx*
+· ˚   · 　 ˚         
+•❅───────✧❅✦❅✧───────❅•
+❲ᴘᴀʀᴛɪᴄɪᴘᴀɴᴛᴇs ᴄᴏɴ ᴘᴜɴᴛᴏs ʀᴇsᴛᴀᴅᴏs❳
+
+${datos.restas.detalles.map(p => `✦   :  *_${p.nombre}:_*\t ${formatoNumero(p.total)}\n`).join('')}
+
+*_Total:_* ${formatoNumero(datos.restas.total)}
+
+*(YA INCLUIDOS)*
+K•❅───────✧❅✦❅✧───────❅•    
+
+☆ *_TOTAL PERSONAJES:_* 
+
+➜ *_${formatoNumero(datos.integrantes.total)}_* ☆
+
+⌢⌢⌢⌢⌢୨୧⌢⌢⌢⌢⌢⌢    
+—⌗ᴘᴜɴᴛᴏs ᴅᴇ ᴀɴɪᴍᴇ:
+    ∇ *_${formatoNumero(datos.millonarios.total)}_* Δ
+⌣ ‿ ‿ ‿ ‿ ‿ ‿ ‿ ⌣ ‿ ‿ ‿ 
+⌢⌢⌢⌢⌢୨୧⌢⌢⌢⌢⌢⌢    
+—⌗ᴘᴜɴᴛᴏs ᴅᴇ  ᴠɪᴘ:
+
+${datos.vips.detalles.map(p => `✦   :  *_${p.nombre}:_*\n   ∇ *_${formatoNumero(p.total * 2)}_* Δ\n`).join('')}
+⬇️
+
+﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀
+   ☆ *_${formatoNumero(datos.integrantes.total + datos.millonarios.total + (datos.vips.total * 2) - datos.restas.total)}_* ☆
+—❨ :ᴘᴜɴᴛᴏs ᴛᴏᴛᴀʟᴇs: ❩╯ 
+(Personajes+anime+vip)
+﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀
+   ☆ *_${formatoNumero(datos.descripcion)}_* ☆
+—❨ :ᴘᴜɴᴛᴏs ᴀᴄᴛᴜᴀʟᴇs: ❩╯ 
+
+﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀
+    ✦ *_${formatoNumero(datos.totalFinal)}_* ✦
+—❨ :ᴘᴜɴᴛᴏs ғɪɴᴀʟᴇs: ❩╯
+
+﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀﹀
+━━━━━━。゜✿ฺ✿ฺ゜。━━━━━━
+Ａｄｍｉｎ Ｅｎｃａｒｇａｄｏ: 
+➜ * 🃏*
+━━━━━━。゜✿ฺ✿ฺ゜。━━━━━━
+`;
+        }
+
+        function generarFichaEstilizada2(datos) {
+            return `
+✦•······················•✦
+       🎴 SATOHAKI 🎴
+   ᴘᴜɴᴛᴀᴊᴇ ᴅɪᴀʀɪᴏ
+✦•······················•✦
+
+📅 FECHA: ${datos.fecha}
+
+✦ INTEGRANTES CON PUNTOS ✦
+${datos.integrantes.detalles.map(p => `⊹ ${p.nombre}: ${formatoNumero(p.total)}\n`).join('')}
+
+➖ RESTAS APLICADAS ➖
+${datos.restas.detalles.map(p => `⊹ ${p.nombre}: ${formatoNumero(p.total)}\n`).join('')}
+
+🎯 TOTAL PERSONAJES: ${formatoNumero(datos.integrantes.total)}
+🎯 TOTAL RESTAS: ${formatoNumero(datos.restas.total)}
+
+⚡ PUNTOS MILLONARIOS: ${formatoNumero(datos.millonarios.total)}
+
+💎 PUNTOS VIP (x2) 💎
+${datos.vips.detalles.map(p => `⊹ ${p.nombre}: ${formatoNumero(p.total * 2)}\n`).join('')}
+
+✦•······················•✦
+💮 DESCRIPCIÓN ACTUAL: ${formatoNumero(datos.descripcion)}
+✨ TOTAL FINAL: ${formatoNumero(datos.totalFinal)}
+✦•······················•✦
+
+✧ Administrador: 🃏 ✧
+`;
+        }
+        
+        function calcularTodo() {
+            const datos = {
+                fecha: document.getElementById('fecha').value.trim(),
+                descripcion: parseFloat(document.getElementById('descripcion').value.replace(/,/g, '')) || 0,
+                integrantes: procesarDatos(document.getElementById('input-integrantes').value),
+                restas: procesarDatos(document.getElementById('input-restas').value),
+                millonarios: { detalles: [], total: evaluarExpresion(document.getElementById('input-millonarios').value) },
+                vips: procesarDatos(document.getElementById('input-vips').value)
+            };
+            datos.totalFinal = datos.descripcion 
+                                + datos.integrantes.total 
+                                + datos.millonarios.total 
+                                - datos.restas.total 
+                                + (datos.vips.total * 2);
+
+            document.getElementById('resultado').textContent = generarTabla(datos);
+            window.ultimoDatos = datos;
+            window.estiloActual = 0;
+            return datos;
+        }
+
         function copiarResultado() {
             const resultado = document.getElementById('resultado');
             navigator.clipboard.writeText(resultado.textContent)
@@ -354,17 +460,28 @@ Rin Itoshi: 85M</textarea>
                 });
         }
 
-        function calcularTodo() {
-            const datos = {
-                fecha: document.getElementById('fecha').value.trim(),
-                descripcion: parseFloat(document.getElementById('descripcion').value.replace(/,/g, '')) || 0,
-                integrantes: procesarDatos(document.getElementById('input-integrantes').value),
-                restas: procesarDatos(document.getElementById('input-restas').value),
-                millonarios: { detalles: [], total: evaluarExpresion(document.getElementById('input-millonarios').value) },
-                vips: procesarDatos(document.getElementById('input-vips').value)
-            };
-            datos.totalFinal = datos.descripcion + datos.integrantes.total + datos.millonarios.total - datos.restas.total + (datos.vips.total * 2);
-            document.getElementById('resultado').textContent = generarTabla(datos);
+        function cambiarFicha() {
+            if (!window.ultimoDatos) {
+                window.ultimoDatos = calcularTodo();
+                return;
+            }
+            
+            window.estiloActual = (window.estiloActual + 1) % 3;
+            
+            let ficha = '';
+            switch(window.estiloActual) {
+                case 0:
+                    ficha = generarTabla(window.ultimoDatos);
+                    break;
+                case 1:
+                    ficha = generarFichaEstilizada1(window.ultimoDatos);
+                    break;
+                case 2:
+                    ficha = generarFichaEstilizada2(window.ultimoDatos);
+                    break;
+            }
+            
+            document.getElementById('resultado').textContent = ficha;
         }
 
         window.addEventListener('DOMContentLoaded', calcularTodo);
